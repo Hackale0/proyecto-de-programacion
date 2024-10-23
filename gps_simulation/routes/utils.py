@@ -22,51 +22,75 @@ def get_shortest_path(start_city, end_city):
 class ArbolBinarioBusqueda:
 
     def __init__(self):
+        # Inicializa el árbol binario de búsqueda.
+        # 'raiz' se establece como None, lo que significa que el árbol está vacío inicialmente.
+        # 'tamano' se inicializa en 0 para rastrear cuántos nodos tiene el árbol.
         self.raiz = None
         self.tamano = 0
 
-    def agregar(self,clave,valor):
+    def agregar(self, clave, valor):
+        # Método para agregar un nuevo nodo al árbol.
+        # Si el árbol ya tiene una raíz, llama a _agregar() para ubicar el nuevo nodo correctamente.
+        # Si no hay raíz, el nuevo nodo se convierte en la raíz del árbol.
         if self.raiz:
-            self._agregar(clave,valor,self.raiz)
+            self._agregar(clave, valor, self.raiz)
         else:
-            self.raiz = NodoArbol(clave,valor)
+            self.raiz = NodoArbol(clave, valor)
+        # Incrementa el tamaño del árbol cada vez que se agrega un nuevo nodo.
         self.tamano = self.tamano + 1
 
-    def _agregar(self,clave,valor,nodoActual):
+    def _agregar(self, clave, valor, nodoActual):
+        # Método auxiliar recursivo para ubicar correctamente el nuevo nodo en el árbol.
+        # Si la clave es menor que la clave del nodo actual, busca en el subárbol izquierdo.
         if clave < nodoActual.clave:
+            # Si el nodo actual tiene un hijo izquierdo, continúa la recursión.
             if nodoActual.tieneHijoIzquierdo():
-                self._agregar(clave,valor,nodoActual.hijoIzquierdo)
+                self._agregar(clave, valor, nodoActual.hijoIzquierdo)
             else:
-                nodoActual.hijoIzquierdo = NodoArbol(clave,valor,padre=nodoActual)
+                # Si no tiene hijo izquierdo, crea un nuevo nodo allí.
+                nodoActual.hijoIzquierdo = NodoArbol(clave, valor, padre=nodoActual)
         else:
+            # Si la clave es mayor o igual a la clave del nodo actual, busca en el subárbol derecho.
             if nodoActual.tieneHijoDerecho():
-                self._agregar(clave,valor,nodoActual.hijoDerecho)
+                self._agregar(clave, valor, nodoActual.hijoDerecho)
             else:
-                nodoActual.hijoDerecho = NodoArbol(clave,valor,padre=nodoActual)
+                # Si no tiene hijo derecho, crea un nuevo nodo allí.
+                nodoActual.hijoDerecho = NodoArbol(clave, valor, padre=nodoActual)
 
-    def __setitem__(self,c,v):
-        self.agregar(c,v)
+    def __setitem__(self, c, v):
+        # Sobrecarga del operador [] para agregar elementos al árbol.
+        # Permite hacer algo como: arbol[clave] = valor
+        self.agregar(c, v)
 
-    def obtener(self,clave):
+    def obtener(self, clave):
+        # Método para obtener el valor asociado a una clave dada.
+        # Si el árbol tiene una raíz, busca la clave llamando al método auxiliar _obtener().
         if self.raiz:
-            res = self._obtener(clave,self.raiz)
+            res = self._obtener(clave, self.raiz)
             if res:
+                # Si encuentra el nodo, devuelve el valor (carga útil) del nodo.
                 return res.cargaUtil
             else:
+                # Si no se encuentra la clave, devuelve None.
                 return None
         else:
             return None
 
-    def _obtener(self,clave,nodoActual):
+    def _obtener(self, clave, nodoActual):
+        # Método auxiliar recursivo para encontrar el nodo con la clave especificada.
         if not nodoActual:
+            # Si el nodo actual es None, significa que la clave no está en el árbol.
             return None
         elif nodoActual.clave == clave:
+            # Si la clave del nodo actual coincide con la clave buscada, devuelve el nodo.
             return nodoActual
         elif clave < nodoActual.clave:
-            return self._obtener(clave,nodoActual.hijoIzquierdo)
+            # Si la clave buscada es menor, busca en el subárbol izquierdo.
+            return self._obtener(clave, nodoActual.hijoIzquierdo)
         else:
-            return self._obtener(clave,nodoActual.hijoDerecho)
-    
+            # Si la clave buscada es mayor, busca en el subárbol derecho.
+            return self._obtener(clave, nodoActual.hijoDerecho)
+
     def obtener_claves(self):
         claves = []
         self._obtener_claves(self.raiz, claves)

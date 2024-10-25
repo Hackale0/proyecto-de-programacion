@@ -2,6 +2,11 @@ from django.db import models
 
 class City(models.Model):
     name = models.CharField(max_length=100)
+    puntos_interes = models.TextField()  # Puntos turísticos relevantes
+    turismo_info = models.TextField(blank=True, null=True)
+    img_url = models.URLField(blank=True, null=True)  
+    actividades = models.TextField(blank=True, null=True)  # Actividades disponibles en la ciudad
+
 
     def __str__(self):
         return self.name

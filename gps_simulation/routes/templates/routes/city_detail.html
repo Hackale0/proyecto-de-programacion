@@ -5,17 +5,34 @@
 {% block content %}
     <div class="container mt-5">
         <h1>{{ ciudad.name }}</h1>
+
+        <!-- Mostrar imagen de la ciudad -->
+        {% if ciudad.image %}
+            <div class="mb-4">
+                <img src="{{ ciudad.image.url }}" alt="{{ ciudad.name }}" class="img-fluid">
+            </div>
+        {% endif %}
         
-        <h3>Rutas desde {{ ciudad.name }}:</h3>
-        <ul class="list-group mb-3">
-            {% for ruta in rutas_salida %}
-                <li class="list-group-item">
-                    Hacia {{ ruta.end_city.name }} ({{ ruta.distance }} km)
-                </li>
-            {% empty %}
-                <li class="list-group-item">No hay rutas de salida.</li>
-            {% endfor %}
-        </ul>
+        <!-- Información de la ciudad -->
+        <div class="mb-4">
+            <h3>Puntos de interés:</h3>
+            <p>{{ ciudad.puntos_interes }}</p>
+        </div>
+        
+        {% if ciudad.turismo_info %}
+        <div class="mb-4">
+            <h3>Información turística:</h3>
+            <p>{{ ciudad.turismo_info }}</p>
+        </div>
+        {% endif %}
+        
+        {% if ciudad.actividades %}
+        <div class="mb-4">
+            <h3>Actividades:</h3>
+            <p>{{ ciudad.actividades }}</p>
+        </div>
+        {% endif %}
+
 
         <h3>Rutas hacia {{ ciudad.name }}:</h3>
         <ul class="list-group mb-3">

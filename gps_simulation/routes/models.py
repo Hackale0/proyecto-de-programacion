@@ -5,6 +5,7 @@ class City(models.Model):
     puntos_interes = models.TextField()  # Puntos turísticos relevantes
     turismo_info = models.TextField(blank=True, null=True)
     actividades = models.TextField(blank=True, null=True)  # Actividades disponibles en la ciudad
+    image = models.ImageField(upload_to='cities_images/', blank=True, null=True)  # Campo para la imagen de la ciudad
 
 
     def __str__(self):

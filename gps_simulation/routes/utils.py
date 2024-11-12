@@ -1,31 +1,41 @@
 import heapq
 from .models import Ciudad, Ruta
 
+# Algoritmo de Dijkstra para encontrar la ruta más corta
 def dijkstra(ciudad_inicial):
-    # Inicializa las distancias y la lista de predecesores
-    distancias = {ciudad_inicial: 0}
-    ciudades_anteriores = {ciudad_inicial: None}
-    cola_prioridad = [(0, ciudad_inicial)]  # Cola de prioridad para almacenar las ciudades a procesar
+    """
+    Implementación del algoritmo de Dijkstra para encontrar la ruta más corta desde una ciudad inicial
+    a todas las demás ciudades.
 
+    :param ciudad_inicial: Ciudad desde donde se inicia la búsqueda de la ruta más corta
+    :return: Diccionario de distancias y un diccionario de ciudades anteriores
+    """
+    
+    distancias = {ciudad_inicial: 0}  # Distancia inicial desde la ciudad_inicial
+    ciudades_anteriores = {ciudad_inicial: None}  # No hay ciudad anterior en el inicio
+    cola_prioridad = [(0, ciudad_inicial)]  # Cola de prioridad para procesar ciudades
+
+    # Itera sobre la cola de prioridad mientras haya ciudades por procesar
     while cola_prioridad:
-        # Extrae la ciudad con la menor distancia
         distancia_actual, ciudad_actual = heapq.heappop(cola_prioridad)
 
         # Obtiene las rutas que salen de la ciudad actual
         rutas = Ruta.objects.filter(ciudad_origen=ciudad_actual)
 
+        # Itera sobre las rutas para actualizar las distancias
         for ruta in rutas:
             vecino = ruta.ciudad_destino
             peso = ruta.distancia
             distancia = distancia_actual + peso
 
-            # Si se encuentra una ruta más corta hacia el vecino, se actualizan las estructuras
+            # Si se encuentra una ruta más corta a un vecino, se actualizan las distancias y los predecesores
             if vecino not in distancias or distancia < distancias[vecino]:
                 distancias[vecino] = distancia
                 ciudades_anteriores[vecino] = ciudad_actual
                 heapq.heappush(cola_prioridad, (distancia, vecino))
 
     return distancias, ciudades_anteriores
+
 
 
 class ArbolBinarioBusqueda:

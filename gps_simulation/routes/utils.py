@@ -1,23 +1,32 @@
 import heapq
-from .models import City, Route
+from .models import Ciudad, Ruta
 
-def dijkstra(start_city):
-    distances = {start_city:0}
-    previous_cities = {start_city:None}
-    # completar
-    return distances, previous_cities
+def dijkstra(ciudad_inicial):
+    # Inicializa las distancias y la lista de predecesores
+    distancias = {ciudad_inicial: 0}
+    ciudades_anteriores = {ciudad_inicial: None}
+    cola_prioridad = [(0, ciudad_inicial)]  # Cola de prioridad para almacenar las ciudades a procesar
 
-def get_shortest_path(start_city, end_city):
-    distances, previous_cities = dijkstra(start_city)
-    path = []
-    city = end_city
+    while cola_prioridad:
+        # Extrae la ciudad con la menor distancia
+        distancia_actual, ciudad_actual = heapq.heappop(cola_prioridad)
 
-    while previous_cities[city]:
-        path.insert(0, city)
-        city = previous_cities[city]
-    path.insert(0, city)
+        # Obtiene las rutas que salen de la ciudad actual
+        rutas = Ruta.objects.filter(ciudad_origen=ciudad_actual)
 
-    return path, distances[end_city]
+        for ruta in rutas:
+            vecino = ruta.ciudad_destino
+            peso = ruta.distancia
+            distancia = distancia_actual + peso
+
+            # Si se encuentra una ruta más corta hacia el vecino, se actualizan las estructuras
+            if vecino not in distancias or distancia < distancias[vecino]:
+                distancias[vecino] = distancia
+                ciudades_anteriores[vecino] = ciudad_actual
+                heapq.heappush(cola_prioridad, (distancia, vecino))
+
+    return distancias, ciudades_anteriores
+
 
 class ArbolBinarioBusqueda:
 

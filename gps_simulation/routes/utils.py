@@ -1,5 +1,5 @@
 import heapq
-from .models import Ciudad, Ruta
+from .models import City, Route
 
 def dijkstra(ciudad_inicial):
     # Inicializa las distancias y la lista de predecesores
@@ -12,10 +12,10 @@ def dijkstra(ciudad_inicial):
         distancia_actual, ciudad_actual = heapq.heappop(cola_prioridad)
 
         # Obtiene las rutas que salen de la ciudad actual
-        rutas = Ruta.objects.filter(ciudad_origen=ciudad_actual)
+        rutas = Route.objects.filter(ciudad_origen=ciudad_actual)
 
         for ruta in rutas:
-            vecino = ruta.ciudad_destino
+            vecino = Route.end_city
             peso = ruta.distancia
             distancia = distancia_actual + peso
 

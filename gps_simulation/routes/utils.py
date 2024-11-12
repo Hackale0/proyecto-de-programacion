@@ -44,6 +44,21 @@ def dijkstra(start_city):
     return distances, previous_cities
 
 
+def get_shortest_path(start_city, end_city):
+    distances, previous_cities = dijkstra(start_city)
+    path = []
+    city = end_city.name  # Convertir el objeto City a su nombre para acceder a los diccionarios
+
+    # Reconstruir el camino desde el diccionario previous_cities
+    while previous_cities[city]:
+        path.insert(0, city)
+        city = previous_cities[city]
+    path.insert(0, city)  # Agregar la ciudad inicial
+
+    return path, distances[end_city.name]
+
+
+
 class ArbolBinarioBusqueda:
 
     def __init__(self):

@@ -1,6 +1,7 @@
 import heapq
-from .models import Ciudad, Ruta
+from .models import City, Route
 
+<<<<<<< HEAD
 # Algoritmo de Dijkstra para encontrar la ruta más corta
 def dijkstra(ciudad_inicial):
     """
@@ -18,10 +19,21 @@ def dijkstra(ciudad_inicial):
     # Itera sobre la cola de prioridad mientras haya ciudades por procesar
     while cola_prioridad:
         distancia_actual, ciudad_actual = heapq.heappop(cola_prioridad)
+=======
+# Algoritmo de Dijkstra
+def dijkstra(start_city):
+    # Inicializamos las distancias de todas las ciudades como infinito
+    distances = {city.name: float('inf') for city in City.objects.all()}
+    distances[start_city.name] = 0  # La distancia a la ciudad inicial es 0
 
-        # Obtiene las rutas que salen de la ciudad actual
-        rutas = Ruta.objects.filter(ciudad_origen=ciudad_actual)
+    # Inicializamos el diccionario para rastrear la ciudad previa en la ruta más corta
+    previous_cities = {city.name: None for city in City.objects.all()}
+>>>>>>> 21191c160c54afb74c8dbf38888c32ad24739483
 
+    # Usamos una cola de prioridad para manejar las ciudades a visitar
+    priority_queue = [(0, start_city.name)]  # (distancia, nombre_ciudad)
+
+<<<<<<< HEAD
         # Itera sobre las rutas para actualizar las distancias
         for ruta in rutas:
             vecino = ruta.ciudad_destino
@@ -33,8 +45,37 @@ def dijkstra(ciudad_inicial):
                 distancias[vecino] = distancia
                 ciudades_anteriores[vecino] = ciudad_actual
                 heapq.heappush(cola_prioridad, (distancia, vecino))
+=======
+    # Construimos un grafo 
+    graph = {city.name: {} for city in City.objects.all()}
+    for route in Route.objects.all():
+        graph[route.start_city.name][route.end_city.name] = route.distance
+        graph[route.end_city.name][route.start_city.name] = route.distance  # Grafo no dirigido
 
-    return distancias, ciudades_anteriores
+    # Procesamos las ciudades mientras haya elementos en la cola de prioridad
+    while priority_queue:
+        # Extraemos la ciudad con la distancia más corta de la cola
+        current_distance, current_city = heapq.heappop(priority_queue)
+>>>>>>> 21191c160c54afb74c8dbf38888c32ad24739483
+
+        # Ignoramos si encontramos una distancia mas larga
+        if current_distance > distances[current_city]:
+            continue
+
+        # Recorremos las ciudades vecinas de la ciudad actual
+        for neighbor, distance in graph[current_city].items():
+            # Calculamos la distancia acumulada al vecino
+            new_distance = current_distance + distance
+
+            # Si encontramos una distancia más corta, actualizamos
+            if new_distance < distances[neighbor]:
+                distances[neighbor] = new_distance
+                previous_cities[neighbor] = current_city
+                # Agregamos el vecino a la cola de prioridad
+                heapq.heappush(priority_queue, (new_distance, neighbor))
+
+    # Retornamos las distancias y las ciudades previas
+    return distances, previous_cities
 
 
 
